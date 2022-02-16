@@ -1,12 +1,44 @@
 {
   "name": "nuxt-templates-cli",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "license": "ISC",
+  "description": "Command line utility to add configurations and features templates to Nuxt projects",
   "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "author": {
+    "name": "Quentin Neyraud",
+    "email": "quentin.neyraud@gmail.com"
+  },
+  "maintainers": [
+    {
+      "name": "Quentin Neyraud",
+      "email": "quentin.neyraud@gmail.com"
+    }
+  ],
+  "contributors": [
+    {
+      "name": "Quentin Neyraud",
+      "email": "quentin.neyraud@gmail.com"
+    }
+  ],
+  "main": "bin/index.js",
+  "files": [
+    "bin/*",
+    "src/*"
+  ],
+  "bin": {
+    "nuxt-templates": "bin/index.js"
+  },
+  "scripts": {
+    "lint": "eslint src/* bin/*",
+    "prepublishOnly": "npm run lint"
+  },
+  "devDependencies": {
+    "@qneyraud/eslint-config": "^1.0.10",
+    "eslint": ">=5",
+    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-nuxt": "^2.0.0",
+    "eslint-plugin-promise": "^5.1.0",
+    "eslint-plugin-standard": "^5.0.0"
+  }
 }
