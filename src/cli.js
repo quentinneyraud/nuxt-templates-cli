@@ -46,9 +46,11 @@ const run = async _ => {
   }
 
   const featuresToInstall = await getFeaturesToInstall()
-  await Promise.all(featuresToInstall.map(install))
+  featuresToInstall.forEach(async _ => {
+    await install(featuresToInstall)
+  })
 
-  // await DependenciesInstaller.installAll()
+  await DependenciesInstaller.installAll()
 
   console.log('All done')
 }
