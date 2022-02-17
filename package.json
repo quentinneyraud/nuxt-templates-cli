@@ -43,6 +43,8 @@
     "eslint-plugin-standard": "^5.0.0"
   },
   "dependencies": {
+    "ansi-colors": "^4.1.1",
+    "cli-progress": "^3.10.0",
     "download": "^8.0.0",
     "inquirer": "^8.2.0",
     "lmify": "^0.3.0",

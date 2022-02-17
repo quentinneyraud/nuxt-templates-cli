@@ -1,4 +1,4 @@
-const path = require('path')
+const { parse: pathParse, resolve: pathResolve } = require('path')
 const github = require('octonode')
 const download = require('download')
 const Config = require('./Config')
@@ -33,7 +33,7 @@ const getFeatures = async _ => {
         const uid = branchName.replace('features/', '')
         const [installationFile] = await getRepo().contentsAsync('nuxt-templates-cli.js', branchName)
 
-        const featureTmpDirectory = path.resolve(Config.tmpDirectory, uid)
+        const featureTmpDirectory = pathResolve(Config.tmpDirectory, uid)
 
         await download(installationFile.download_url, featureTmpDirectory)
 
@@ -61,8 +61,11 @@ const getDirectoryContent = async (directoryPath, branchName = 'master') => {
   const parseFileOrDir = fileOrDir => {
     const { name, download_url: downloadUrl, type, path } = fileOrDir
 
+    const pathDirectory = pathParse(path).dir
+
     return {
       name,
+      pathDirectory,
       path,
       type,
       downloadUrl
@@ -72,7 +75,7 @@ const getDirectoryContent = async (directoryPath, branchName = 'master') => {
   try {
     const [directoryContents] = await getRepo().contentsAsync(directoryPath, branchName)
 
-    if (!Array.isArray()) {
+    if (!Array.isArray(directoryContents)) {
       return parseFileOrDir(directoryContents)
     }
 
