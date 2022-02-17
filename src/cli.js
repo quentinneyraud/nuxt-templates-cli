@@ -1,9 +1,16 @@
 const inquirer = require('inquirer')
 
-const { getFeatures } = require('./Github')
-const { install } = require('./Installer')
-const { removeDirectory, isNuxtDir } = require('./utils')
-const DependenciesInstaller = require('./DependenciesInstaller')
+const { getFeatures } = require('./Github.js')
+const { install } = require('./Installer.js')
+const DependenciesInstaller = require('./DependenciesInstaller.js')
+const Config = require('./Config.js')
+const { removeDirectory, isNuxtDir } = require('./utils.js')
+
+const DEFAULT_CONFIG = {
+  noConfig: false,
+  repository: 'quentinneyraud/nuxt-templates',
+  token: null
+}
 
 /**
  * Get all available features from Github repo,
@@ -37,21 +44,26 @@ const getFeaturesToInstall = async _ => {
     .filter(availableFeature => featuresUidsToInstall.includes(availableFeature.uid))
 }
 
-module.exports = {
-  run: async _ => {
-    if (!isNuxtDir(process.cwd())) {
-      throw String('Not a Nuxt directory')
-    }
+const run = async _ => {
+  Config.parse()
 
-    const featuresToInstall = await getFeaturesToInstall()
-    await Promise.all(featuresToInstall.map(install))
-
-    // await DependenciesInstaller.installAll()
-
-    console.log('all done')
-
-    // await install(features[0])
-
-    // removeDirectory('./tmp')
+  if (!isNuxtDir(process.cwd())) {
+    throw String('Not a Nuxt directory')
   }
+
+  const featuresToInstall = await getFeaturesToInstall()
+  await Promise.all(featuresToInstall.map(install))
+
+  await DependenciesInstaller.installAll()
+
+  console.log('All done')
+}
+
+const clean = _ => {
+  removeDirectory(Config.tmpDirectory)
+}
+
+module.exports = {
+  run,
+  clean
 }

@@ -1,5 +1,5 @@
-const { install } = require('lmify')
-const { removeDuplicates } = require('./utils')
+const lmify = require('lmify')
+const { removeDuplicates } = require('./utils.js')
 
 const DependenciesInstaller = {
   dependencies: [],
@@ -18,11 +18,11 @@ const DependenciesInstaller = {
   },
 
   async installDependencies () {
-    await install(...removeDuplicates(this.dependencies))
+    await lmify.install(...removeDuplicates(this.dependencies))
   },
 
   async installDevDependencies () {
-    await install(['-D', ...removeDuplicates(this.devDependencies)])
+    await lmify.install(['-D', ...removeDuplicates(this.devDependencies)])
   },
 
   async installAll () {

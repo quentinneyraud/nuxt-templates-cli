@@ -12,10 +12,6 @@ const isNuxtDir = rootDirectory => {
   return false
 }
 
-const createDirectory = async directoryPath => {
-  await fsPromises.mkdir(directoryPath, { recursive: true })
-}
-
 const removeDirectory = async directoryPath => {
   await fsPromises.rm(directoryPath, { recursive: true })
 }
@@ -25,9 +21,8 @@ const removeDuplicates = arr => Array.from(new Set(arr))
 const mergeArrays = arrays => [].concat(...arrays)
 
 module.exports = {
-  createDirectory,
-  removeDirectory,
   isNuxtDir,
+  removeDirectory,
   removeDuplicates,
   mergeArrays
 }

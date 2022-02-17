@@ -1,13 +1,21 @@
+const path = require('path')
 const github = require('octonode')
 const download = require('download')
+const Config = require('./Config')
 
-const TOKEN = ''
+let ghrepo
 
-const client = github.client(TOKEN)
-const ghrepo = client.repo('quentinneyraud/nuxt-templates')
+const getRepo = () => {
+  if (!ghrepo) {
+    const client = github.client(Config.token)
+    ghrepo = client.repo(Config.repository)
+  }
+
+  return ghrepo
+}
 
 const getFeaturesBranchesNames = async _ => {
-  const [branches] = await ghrepo.branchesAsync()
+  const [branches] = await getRepo().branchesAsync()
 
   return branches
     .filter(({ name }) => name.includes('features'))
@@ -23,16 +31,17 @@ const getFeatures = async _ => {
     .map(async branchName => {
       try {
         const uid = branchName.replace('features/', '')
-        const [installationFile] = await ghrepo.contentsAsync('nuxt-templates-cli.js', branchName)
+        const [installationFile] = await getRepo().contentsAsync('nuxt-templates-cli.js', branchName)
 
-        const folder = `${process.cwd()}/tmp/${uid}`
+        const featureTmpDirectory = path.resolve(Config.tmpDirectory, uid)
 
-        await download(installationFile.download_url, folder)
+        await download(installationFile.download_url, featureTmpDirectory)
 
-        const { metas, dependencies, devDependencies, files } = require(`${folder}/nuxt-templates-cli.js`)
+        const { metas, dependencies, devDependencies, files } = require(`${featureTmpDirectory}/nuxt-templates-cli.js`)
 
         return {
           uid,
+          featureTmpDirectory,
           branchName,
           metas,
           dependencies,
@@ -49,19 +58,29 @@ const getFeatures = async _ => {
 }
 
 const getDirectoryContent = async (directoryPath, branchName = 'master') => {
-  const [directoryContents] = await ghrepo.contentsAsync(directoryPath, branchName)
+  const parseFileOrDir = fileOrDir => {
+    const { name, download_url: downloadUrl, type, path } = fileOrDir
 
-  return directoryContents
-    .map(fileOrDir => {
-      const { name, download_url: downloadUrl, type, path } = fileOrDir
+    return {
+      name,
+      path,
+      type,
+      downloadUrl
+    }
+  }
 
-      return {
-        name,
-        path,
-        type,
-        downloadUrl
-      }
-    })
+  try {
+    const [directoryContents] = await getRepo().contentsAsync(directoryPath, branchName)
+
+    if (!Array.isArray()) {
+      return parseFileOrDir(directoryContents)
+    }
+
+    return directoryContents
+      .map(parseFileOrDir)
+  } catch (_) {
+    return null
+  }
 }
 
 const recursivelyGetDirectoryContent = async (directoryPath, branchName, acc = []) => {

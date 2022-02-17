@@ -4,5 +4,7 @@ module.exports = {
     node: true
   },
   extends: '@qneyraud/eslint-config',
-  rules: {}
+  rules: {
+    'no-console': 0
+  }
 }
