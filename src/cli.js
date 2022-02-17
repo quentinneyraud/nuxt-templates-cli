@@ -6,12 +6,6 @@ const DependenciesInstaller = require('./DependenciesInstaller.js')
 const Config = require('./Config.js')
 const { removeDirectory, isNuxtDir } = require('./utils.js')
 
-const DEFAULT_CONFIG = {
-  noConfig: false,
-  repository: 'quentinneyraud/nuxt-templates',
-  token: null
-}
-
 /**
  * Get all available features from Github repo,
  * then display them in a checkbox list to let user choose which ones he wants to add
