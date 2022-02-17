@@ -22,14 +22,17 @@ const getFeatures = async _ => {
   const promises = branchesNames
     .map(async branchName => {
       try {
+        const uid = branchName.replace('features/', '')
         const [installationFile] = await ghrepo.contentsAsync('nuxt-templates-cli.js', branchName)
 
-        await download(installationFile.download_url, `${process.cwd()}/tmp/${branchName}`)
+        const folder = `${process.cwd()}/tmp/${uid}`
 
-        const { metas, dependencies, devDependencies, files } = require(`${process.cwd()}/tmp/${branchName}/nuxt-templates-cli.js`)
+        await download(installationFile.download_url, folder)
+
+        const { metas, dependencies, devDependencies, files } = require(`${folder}/nuxt-templates-cli.js`)
 
         return {
-          uid: branchName.replace('features/', ''),
+          uid,
           branchName,
           metas,
           dependencies,
@@ -45,10 +48,10 @@ const getFeatures = async _ => {
     .filter(v => !!v)
 }
 
-const getFiles = async (filePath, branchName = 'master') => {
-  const [filesOrDirs] = await ghrepo.contentsAsync(filePath, branchName)
+const getDirectoryContent = async (directoryPath, branchName = 'master') => {
+  const [directoryContents] = await ghrepo.contentsAsync(directoryPath, branchName)
 
-  return filesOrDirs
+  return directoryContents
     .map(fileOrDir => {
       const { name, download_url: downloadUrl, type, path } = fileOrDir
 
@@ -61,7 +64,24 @@ const getFiles = async (filePath, branchName = 'master') => {
     })
 }
 
+const recursivelyGetDirectoryContent = async (directoryPath, branchName, acc = []) => {
+  const directoryContents = await getDirectoryContent(directoryPath, branchName)
+
+  await Promise.all(directoryContents.map(async fileOrDir => {
+    if (fileOrDir.type === 'file') {
+      acc.push(fileOrDir)
+    }
+
+    if (fileOrDir.type === 'dir') {
+      await recursivelyGetDirectoryContent(fileOrDir.path, branchName, acc)
+    }
+  }))
+
+  return acc
+}
+
 module.exports = {
   getFeatures,
-  getFiles
+  getDirectoryContent,
+  recursivelyGetDirectoryContent
 }

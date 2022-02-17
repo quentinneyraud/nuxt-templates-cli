@@ -22,9 +22,12 @@ const removeDirectory = async directoryPath => {
 
 const removeDuplicates = arr => Array.from(new Set(arr))
 
+const mergeArrays = arrays => [].concat(...arrays)
+
 module.exports = {
   createDirectory,
   removeDirectory,
   isNuxtDir,
-  removeDuplicates
+  removeDuplicates,
+  mergeArrays
 }

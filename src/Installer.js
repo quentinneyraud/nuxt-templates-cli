@@ -1,5 +1,7 @@
+const download = require('download')
 const DependenciesInstaller = require('./DependenciesInstaller')
-const { getFiles } = require('./Github')
+const { recursivelyGetDirectoryContent } = require('./Github')
+const { mergeArrays } = require('./utils')
 
 const install = async ({ branchName, dependencies, devDependencies, files } = {}) => {
   // dependencies
@@ -12,24 +14,13 @@ const install = async ({ branchName, dependencies, devDependencies, files } = {}
     DependenciesInstaller.addDevDependencies(devDependencies)
   }
 
-  const getAllFiles = async (acc, file) => {
-    const ffiles = await getFiles(file, branchName)
+  // files
+  const allFilesPromises = files.map(file => recursivelyGetDirectoryContent(file, branchName))
+  let allFiles = await Promise.all(allFilesPromises)
+  allFiles = mergeArrays(allFiles)
 
-    await Promise.all(ffiles.map(async f => {
-      if (f.type === 'file') {
-        acc.push(f)
-      }
-
-      if (f.type === 'dir') {
-        await getAllFiles(acc, f.path)
-      }
-    }))
-
-    return acc
-  }
-
-  const a = await getAllFiles([], files[0])
-  console.log('a:', a)
+  const downloadAllFilesPromises = allFiles.map(file => download(file.downloadUrl, file.path))
+  await Promise.all(downloadAllFilesPromises)
 }
 
 module.exports = {
