@@ -28,16 +28,18 @@ const install = async ({ uid, featureTmpDirectory, branchName, dependencies, dev
     format: colors.cyan('{bar}') + ' {percentage}% ({value}/{total})'
   }, cliProgress.Presets.shades_classic)
 
-  // Glob all files
-  const allFilesPromises = files.map(file => recursivelyGetDirectoryContent(file, branchName))
-  let allFiles = await Promise.all(allFilesPromises)
-  allFiles = mergeArrays(allFiles)
+  if (files) {
+    // Glob all files
+    const allFilesPromises = files.map(file => recursivelyGetDirectoryContent(file, branchName))
+    let allFiles = await Promise.all(allFilesPromises)
+    allFiles = mergeArrays(allFiles)
 
-  // Store download promises
-  fileDownloadsPromises.push(...allFiles.map(file => async _ => {
-    await download(file.downloadUrl, file.pathDirectory)
-    progressBar.increment()
-  }))
+    // Store download promises
+    fileDownloadsPromises.push(...allFiles.map(file => async _ => {
+      await download(file.downloadUrl, file.pathDirectory)
+      progressBar.increment()
+    }))
+  }
 
   /**
    *

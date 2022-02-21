@@ -18,11 +18,11 @@ const DependenciesInstaller = {
   },
 
   async installDependencies () {
-    await lmify.install(...removeDuplicates(this.dependencies))
+    this.dependencies.length && await lmify.install(...removeDuplicates(this.dependencies))
   },
 
   async installDevDependencies () {
-    await lmify.install(['-D', ...removeDuplicates(this.devDependencies)])
+    this.devDependencies.length && await lmify.install(['-D', ...removeDuplicates(this.devDependencies)])
   },
 
   async installAll () {

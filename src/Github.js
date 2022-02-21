@@ -20,8 +20,6 @@ const getFeaturesBranchesNames = async _ => {
   return branches
     .filter(({ name }) => name.includes('features'))
     .map(({ name }) => name)
-    // TODO: remove
-    .slice(15, 16)
 }
 
 const getFeatures = async _ => {
