@@ -37,6 +37,8 @@ const getFeatures = async _ => {
 
         const { metas, dependencies, devDependencies, files } = require(`${featureTmpDirectory}/nuxt-templates-cli.js`)
 
+        if (!metas?.title || typeof metas.title !== 'string') return null
+
         return {
           uid,
           featureTmpDirectory,

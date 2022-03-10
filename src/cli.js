@@ -15,12 +15,19 @@ const { removeDirectory, isNuxtDir } = require('./utils.js')
 const getFeaturesToInstall = async _ => {
   const availableFeatures = await getFeatures()
 
+  const longestFeatureTitle = availableFeatures
+    .reduce((longest, feature) => {
+      if (feature.metas.title.length > longest) longest = feature.metas.title.length
+
+      return longest
+    }, 0)
+
   const choices = availableFeatures
     .map(feature => {
       return {
-        name: `${feature?.metas.title} (${feature?.metas.description})`,
+        name: `${feature.metas.title.padEnd(longestFeatureTitle + 10, ' ')} (${feature.metas?.description})`,
         value: feature.uid,
-        checked: true
+        checked: false
       }
     })
 
