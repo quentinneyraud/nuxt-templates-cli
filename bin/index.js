@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
-console.log()
-
 const { run, clean } = require('../src/cli.js')
+
+process.on('exit', clean)
+
+console.log()
 
 run()
   .catch((error) => {
     if (error) console.error('Error:', error)
-    process.exit(2)
   })
-  .finally(clean)

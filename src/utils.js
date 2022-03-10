@@ -1,6 +1,5 @@
 const fs = require('fs')
 const path = require('path')
-const fsPromises = fs.promises
 
 // https://github.com/nuxt/nuxt.js/blob/dev/packages/cli/src/utils/dir.js
 const isNuxtDir = rootDirectory => {
@@ -13,7 +12,7 @@ const isNuxtDir = rootDirectory => {
 }
 
 const removeDirectory = async directoryPath => {
-  await fsPromises.rm(directoryPath, { recursive: true })
+  await fs.rmSync(directoryPath, { recursive: true })
 }
 
 const removeDuplicates = arr => Array.from(new Set(arr))
