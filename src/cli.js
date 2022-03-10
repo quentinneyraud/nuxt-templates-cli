@@ -55,9 +55,10 @@ const run = async _ => {
   }
 
   const featuresToInstall = await getFeaturesToInstall()
-  featuresToInstall.forEach(async featureToInstall => {
+
+  for (const featureToInstall of featuresToInstall) {
     await install(featureToInstall)
-  })
+  }
 
   await DependenciesInstaller.installAll()
 
