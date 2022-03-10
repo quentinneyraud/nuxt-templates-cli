@@ -28,9 +28,11 @@ const getFeaturesToInstall = async _ => {
     .prompt([
       {
         type: 'checkbox',
-        message: 'Select features',
         name: 'features',
-        choices
+        message: 'Select features',
+        choices,
+        pageSize: choices.length,
+        loop: false
       }
     ])
 
