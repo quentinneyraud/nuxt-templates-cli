@@ -73,11 +73,13 @@ const install = async ({ uid, featureTmpDirectory, branchName, dependencies, dev
   await Promise.all(fileDownloadsPromises.map(fn => fn()))
   progressBar.stop()
 
-  console.log()
-  console.log()
-  console.log(featureConfig)
-  console.log()
-  console.log()
+  if (featureConfig) {
+    console.log()
+    console.log()
+    console.log(featureConfig)
+    console.log()
+    console.log()
+  }
 }
 
 module.exports = {

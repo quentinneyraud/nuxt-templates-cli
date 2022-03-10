@@ -27,6 +27,7 @@ const getFeaturesToInstall = async _ => {
       return {
         name: `${feature.metas.title.padEnd(longestFeatureTitle + 10, ' ')} (${feature.metas?.description})`,
         value: feature.uid,
+        short: feature.metas.title,
         checked: false
       }
     })
