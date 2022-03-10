@@ -76,7 +76,7 @@ const getDirectoryContent = async (directoryPath, branchName = 'master') => {
     const [directoryContents] = await getRepo().contentsAsync(directoryPath, branchName)
 
     if (!Array.isArray(directoryContents)) {
-      return parseFileOrDir(directoryContents)
+      return [parseFileOrDir(directoryContents)]
     }
 
     return directoryContents
