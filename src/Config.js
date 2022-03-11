@@ -1,13 +1,11 @@
 const path = require('path')
 const Log = require('../src/Log.js')
 
-const CONFIG_DOWNLOAD_ARGUMENT = '--no-config'
 const TOKEN_ARGUMENT = '--token'
 const REPOSITORY_ARGUMENT = '--repository'
 const TMP_DIRECTORY_ARGUMENT = '--tmp'
 
 const Config = {
-  noConfigDownload: false,
   repository: 'quentinneyraud/nuxt-templates',
   token: null,
   rootDirectory: process.cwd(),
@@ -21,9 +19,6 @@ const Config = {
       this.logHelp()
       throw String()
     }
-
-    // no config
-    if (args.includes('--no-config')) this.noConfigDownload = true
 
     // token
     if (args.includes('--token')) {
@@ -50,7 +45,6 @@ const Config = {
 Nuxt templates CLI
 
 Arguments:
-    ${CONFIG_DOWNLOAD_ARGUMENT}: Use this to logs feature config instead of downloading it in configs folder
     ${TOKEN_ARGUMENT}: Create a token (https://github.com/settings/tokens) to extend API limit
     ${REPOSITORY_ARGUMENT}: Github repository name (default: quentinneyraud/nuxt-templates)
     ${TMP_DIRECTORY_ARGUMENT}: Temporary directory to download files, use an empty directory (default: ./tmp)

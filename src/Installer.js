@@ -48,26 +48,15 @@ const install = async ({ uid, metas, featureTmpDirectory, branchName, dependenci
    *
    */
   const configFile = (await getDirectoryContent('config.js', branchName))?.[0]
-  let featureConfig = null
 
   if (configFile) {
-    // Log config instead of download it
-    if (Config.noConfigDownload) {
-      fileDownloadsPromises.push(async _ => {
-        await download(configFile.downloadUrl, featureTmpDirectory)
-        progressBar.increment()
-
-        featureConfig = require(`${featureTmpDirectory}/config.js`)?.()
+    fileDownloadsPromises.push(async _ => {
+      await download(configFile.downloadUrl, 'configs', {
+        filename: `nuxt.config.${uid}.js`
       })
-    } else {
-      fileDownloadsPromises.push(async _ => {
-        await download(configFile.downloadUrl, 'configs', {
-          filename: `nuxt.config.${uid}.js`
-        })
 
-        progressBar.increment()
-      })
-    }
+      progressBar.increment()
+    })
   }
 
   index === 0 && Log.separator()
@@ -79,10 +68,6 @@ const install = async ({ uid, metas, featureTmpDirectory, branchName, dependenci
   progressBar.start(fileDownloadsPromises.length, 0)
   await Promise.all(fileDownloadsPromises.map(fn => fn()))
   progressBar.stop()
-
-  if (featureConfig) {
-    Log.log(featureConfig)
-  }
 
   Log.blankLine()
   Log.separator()
