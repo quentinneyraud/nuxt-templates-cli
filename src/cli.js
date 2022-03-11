@@ -1,83 +1,94 @@
-const inquirer = require('inquirer')
+const c = require('ansi-colors')
+const Log = require('./Log.js')
 
-const { getFeatures } = require('./Github.js')
-const { install } = require('./Installer.js')
-const DependenciesInstaller = require('./DependenciesInstaller.js')
-const Config = require('./Config.js')
-const { removeDirectory, isNuxtDir } = require('./utils.js')
-const Log = require('../src/Log.js')
+const INSTALL_COMMAND = 'install'
+const CONFIG_COMMAND = 'get-config'
+const COMMANDS = [INSTALL_COMMAND, CONFIG_COMMAND]
 
-/**
- * Get all available features from Github repo,
- * then display them in a checkbox list to let user choose which ones he wants to add
- *
- * @returns {Array} Array of features objects selected by user
- */
-const getFeaturesToInstall = async _ => {
-  const availableFeatures = await getFeatures()
+const HELP_ARGUMENT = '--help'
+const HELP_ARGUMENT_ALIAS = '-h'
+const INSTALL_TOKEN_ARGUMENT = '--token'
+const INSTALL_REPOSITORY_ARGUMENT = '--repository'
+const INSTALL_TMP_DIRECTORY_ARGUMENT = '--tmp'
 
-  const longestFeatureTitle = availableFeatures
-    .reduce((longest, feature) => {
-      if (feature.metas.title.length > longest) longest = feature.metas.title.length
+const Cli = {
+  INSTALL_COMMAND,
+  CONFIG_COMMAND,
 
-      return longest
-    }, 0)
+  args: null,
 
-  const choices = availableFeatures
-    .map(feature => {
-      return {
-        name: `${feature.metas.title.padEnd(longestFeatureTitle + 10, ' ')} (${feature.metas?.description})`,
-        value: feature.uid,
-        short: feature.metas.title,
-        checked: false
-      }
-    })
+  command: null,
 
-  const { features: featuresUidsToInstall } = await inquirer
-    .prompt([
-      {
-        type: 'checkbox',
-        name: 'features',
-        message: 'Select features',
-        choices,
-        pageSize: choices.length,
-        loop: false
-      }
-    ])
+  arguments: {
+    help: false,
+    token: null,
+    repository: null,
+    tmpDirectory: null
+  },
 
-  return availableFeatures
-    .filter(availableFeature => featuresUidsToInstall.includes(availableFeature.uid))
-}
+  getCommand () {
+    const maybeCommand = this.args[0]
 
-const run = async _ => {
-  Config.parse()
+    if (!COMMANDS.includes(maybeCommand)) return
 
-  if (!isNuxtDir(process.cwd())) {
-    throw String('Not a Nuxt directory')
+    this.command = maybeCommand
+  },
+
+  getArguments () {
+    // Help
+    if (this.args.includes(HELP_ARGUMENT) || this.args.includes(HELP_ARGUMENT_ALIAS)) {
+      this.arguments.help = true
+
+      return
+    }
+
+    // token
+    if (this.args.includes(INSTALL_TOKEN_ARGUMENT)) {
+      const tokenArgumentIndex = this.args.findIndex(argument => argument === INSTALL_TOKEN_ARGUMENT)
+      if (tokenArgumentIndex > -1 && this.args?.[tokenArgumentIndex + 1]) this.arguments.token = this.args?.[tokenArgumentIndex + 1]
+    }
+
+    // repository
+    if (this.args.includes(INSTALL_REPOSITORY_ARGUMENT)) {
+      const repositoryArgumentIndex = this.args.findIndex(argument => argument === INSTALL_REPOSITORY_ARGUMENT)
+      if (repositoryArgumentIndex > -1 && this.args?.[repositoryArgumentIndex + 1]) this.arguments.repository = this.args?.[repositoryArgumentIndex + 1]
+    }
+
+    // tmp directory
+    if (this.args.includes(INSTALL_TMP_DIRECTORY_ARGUMENT)) {
+      const tmpArgumentIndex = this.args.findIndex(argument => argument === INSTALL_TMP_DIRECTORY_ARGUMENT)
+      if (tmpArgumentIndex > -1 && this.args?.[tmpArgumentIndex + 1]) this.arguments.tmpDirectory = this.args?.[tmpArgumentIndex + 1]
+    }
+  },
+
+  parse () {
+    this.args = process.argv.slice(2)
+
+    this.getCommand()
+
+    if (!this.command) return
+
+    this.getArguments()
+  },
+
+  logHelp () {
+    Log.log(`${c.bold.underline('Nuxt templates CLI')}
+
+${c.bold('Commands')}:
+    ${INSTALL_COMMAND}: Install one or more features
+    ${CONFIG_COMMAND}: Logs and copy to clipoard custom nuxt.config.js file content
+
+${c.bold('Arguments')}:
+    ${HELP_ARGUMENT} | ${HELP_ARGUMENT_ALIAS}: Display this help
+    ${INSTALL_TOKEN_ARGUMENT}: Create a token (https://github.com/settings/tokens) to extend API limit
+    ${INSTALL_REPOSITORY_ARGUMENT}: Github repository name (default: quentinneyraud/nuxt-templates)
+    ${INSTALL_TMP_DIRECTORY_ARGUMENT}: Temporary directory to download files, use an empty directory (default: ./tmp)
+
+${c.bold('Examples')}:
+    nuxt-templates ${CONFIG_COMMAND}
+    nuxt-templates ${INSTALL_COMMAND} ${INSTALL_TOKEN_ARGUMENT} abc123
+`)
   }
-
-  const featuresToInstall = await getFeaturesToInstall()
-
-  Log.blankLine()
-
-  for (const featureToInstallIndex in featuresToInstall) {
-    await install(featuresToInstall[featureToInstallIndex], parseInt(featureToInstallIndex))
-  }
-
-  Log.blankLine()
-
-  await DependenciesInstaller.installAll()
-
-  Log.blankLine()
-
-  Log.success('🎉 All features are installed')
 }
 
-const clean = _ => {
-  removeDirectory(Config.tmpDirectory)
-}
-
-module.exports = {
-  run,
-  clean
-}
+module.exports = Cli

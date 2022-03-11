@@ -1,13 +1,36 @@
 #!/usr/bin/env node
 
-const { run, clean } = require('../src/cli.js')
+const Cli = require('../src/Cli.js')
 const Log = require('../src/Log.js')
 
-process.on('exit', clean)
+// Commands
+const install = require('../src/commands/install/index.js')
+const getConfig = require('../src/commands/get-config/index.js')
 
 Log.blankLine()
 
-run()
-  .catch((error) => {
-    if (error) console.error('Error:', error)
-  })
+// Get commands and arguments from CLI entry
+Cli.parse()
+
+// No command or help argument
+if (!Cli.command || Cli.arguments.help) {
+  Cli.logHelp()
+  process.exit(0)
+}
+
+// Install features
+if (Cli.command === Cli.INSTALL_COMMAND) {
+  process.on('exit', install.clean)
+
+  install
+    .run(Cli.arguments)
+    .catch((error) => {
+      if (error) console.error('Error:', error)
+    })
+}
+
+// Get nuxt.config.js content
+if (Cli.command === Cli.CONFIG_COMMAND) {
+  getConfig
+    .run()
+}

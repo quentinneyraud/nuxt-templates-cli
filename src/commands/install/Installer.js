@@ -1,11 +1,10 @@
 const download = require('download')
 const colors = require('ansi-colors')
 const cliProgress = require('cli-progress')
-const Config = require('./Config.js')
-const Log = require('../src/Log.js')
+const Log = require('../../Log.js')
 const DependenciesInstaller = require('./DependenciesInstaller.js')
 const { recursivelyGetDirectoryContent, getDirectoryContent } = require('./Github.js')
-const { mergeArrays } = require('./utils.js')
+const { mergeArrays } = require('../../utils.js')
 
 const install = async ({ uid, metas, featureTmpDirectory, branchName, dependencies, devDependencies, files } = {}, index) => {
   const fileDownloadsPromises = []

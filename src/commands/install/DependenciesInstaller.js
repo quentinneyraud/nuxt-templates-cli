@@ -1,6 +1,6 @@
 const lmify = require('lmify')
-const { removeDuplicates } = require('./utils.js')
-const Log = require('./Log.js')
+const { removeDuplicates } = require('../../utils.js')
+const Log = require('../../Log.js')
 
 const DependenciesInstaller = {
   dependencies: [],
