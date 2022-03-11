@@ -74,7 +74,6 @@ const run = async (cliArgs) => {
 }
 
 const clean = _ => {
-  console.log('clean')
   removeDirectory(Config.tmpDirectory)
 }
 
