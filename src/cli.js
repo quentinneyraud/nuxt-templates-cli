@@ -5,6 +5,7 @@ const { install } = require('./Installer.js')
 const DependenciesInstaller = require('./DependenciesInstaller.js')
 const Config = require('./Config.js')
 const { removeDirectory, isNuxtDir } = require('./utils.js')
+const Log = require('../src/Log.js')
 
 /**
  * Get all available features from Github repo,
@@ -57,13 +58,19 @@ const run = async _ => {
 
   const featuresToInstall = await getFeaturesToInstall()
 
-  for (const featureToInstall of featuresToInstall) {
-    await install(featureToInstall)
+  Log.blankLine()
+
+  for (const featureToInstallIndex in featuresToInstall) {
+    await install(featuresToInstall[featureToInstallIndex], parseInt(featureToInstallIndex))
   }
+
+  Log.blankLine()
 
   await DependenciesInstaller.installAll()
 
-  console.log('All done')
+  Log.blankLine()
+
+  Log.success('🎉 All features are installed')
 }
 
 const clean = _ => {

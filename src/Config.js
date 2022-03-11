@@ -1,4 +1,5 @@
 const path = require('path')
+const Log = require('../src/Log.js')
 
 const CONFIG_DOWNLOAD_ARGUMENT = '--no-config'
 const TOKEN_ARGUMENT = '--token'
@@ -45,7 +46,7 @@ const Config = {
   },
 
   logHelp () {
-    console.log(`
+    Log.log(`
 Nuxt templates CLI
 
 Arguments:

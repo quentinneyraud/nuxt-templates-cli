@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 
 const { run, clean } = require('../src/cli.js')
+const Log = require('../src/Log.js')
 
 process.on('exit', clean)
 
-console.log()
+Log.blankLine()
 
 run()
   .catch((error) => {
