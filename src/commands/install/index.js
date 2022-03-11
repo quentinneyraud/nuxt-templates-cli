@@ -52,9 +52,6 @@ const getFeaturesToInstall = async _ => {
 const run = async (cliArgs) => {
   Config.merge(cliArgs)
 
-  console.log(Config)
-  process.exit()
-
   if (!isNuxtDir(process.cwd())) {
     throw String('Not a Nuxt directory')
   }
