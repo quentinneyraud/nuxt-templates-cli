@@ -61,7 +61,8 @@ const getDirectoryContent = async (directoryPath, branchName = 'master') => {
   const parseFileOrDir = fileOrDir => {
     const { name, download_url: downloadUrl, type, path } = fileOrDir
 
-    const pathDirectory = pathParse(path).dir
+    let pathDirectory = pathParse(path).dir
+    if (pathDirectory === '') pathDirectory = './'
 
     return {
       name,
