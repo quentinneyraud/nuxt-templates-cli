@@ -6,6 +6,9 @@ const ENVIRONMENT = process.env.ENV
 const IS_DEV = ENVIRONMENT === 'dev'
 const IS_PROD = ENVIRONMENT === 'prod'
 
+const title = 'My project'
+const BASE_URL = 'http://myproject.fr'
+
 /**
 
   Returns an array of each features config
@@ -23,8 +26,11 @@ const getFeaturesConfigs = async (_) => {
   return configsFilesNames
     .map((configFileName) => {
       return require(path.resolve(CONFIGS_PATH, configFileName))({
+        ENVIRONMENT,
         IS_DEV,
-        IS_PROD
+        IS_PROD,
+        BASE_URL,
+        title
       })
     })
 }
