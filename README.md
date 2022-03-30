@@ -16,7 +16,7 @@ npm install -g nuxt-tmeplates-cli
 nuxt-templates install
 ```
 
-Displays a checkbox list of all features (all branches in the repository that start by `features/`).  
+Displays a checkbox list of all features (all branches in the repository that start with `features/`).  
 After selection, it downloads all required files and install dependencies with yarn or npm.
 
 #### Arguments
