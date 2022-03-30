@@ -2,6 +2,8 @@ import fs, { promises as fsPromises } from 'fs'
 import path from 'path'
 import defu from 'defu'
 
+const MODE = process.env.MODE
+
 const ENVIRONMENT = process.env.ENV
 const IS_DEV = ENVIRONMENT === 'dev'
 const IS_PROD = ENVIRONMENT === 'prod'
@@ -26,6 +28,7 @@ const getFeaturesConfigs = async (_) => {
   return configsFilesNames
     .map((configFileName) => {
       return require(path.resolve(CONFIGS_PATH, configFileName))({
+        MODE,
         ENVIRONMENT,
         IS_DEV,
         IS_PROD,
@@ -40,7 +43,7 @@ export default async (_) => {
     target: 'static',
 
     head: {
-      title: 'test-nuxt-templates-cli',
+      title,
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
