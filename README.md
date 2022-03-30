@@ -16,7 +16,7 @@ npm install -g nuxt-tmeplates-cli
 nuxt-templates install
 ```
 
-Displays a checkbox list of all features (all branches in repo that start by `features/`).  
+Displays a checkbox list of all features (all branches in the repository that start by `features/`).  
 After selection, it downloads all required files and install dependencies with yarn or npm.
 
 #### Arguments
@@ -29,7 +29,7 @@ Create an API token in [Github developer settings](https://github.com/settings/t
 
 - **Repository (`install --repository xxx`)**
 
-By default, `install` command is looking for features in `quentinneyraud/nuxt-templates` Github repository. Pass an other repository name if you forked it to add your own features. 
+By default, `install` command is looking for features in `quentinneyraud/nuxt-templates` Github repository. Pass an other repository name if you forked it to add your own features (More info on how to do it [here](https://github.com/quentinneyraud/nuxt-templates)). 
 
 - **Tmp directory (`install --tmp my-directory`)**
 
