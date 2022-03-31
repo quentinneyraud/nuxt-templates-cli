@@ -5,7 +5,7 @@
 ## Installation
 
 ```bash
-npm install -g nuxt-tmeplates-cli
+npm install -g nuxt-templates-cli
 ```
 
 ## Usage
