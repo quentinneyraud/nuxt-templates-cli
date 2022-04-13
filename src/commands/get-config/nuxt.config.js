@@ -1,15 +1,21 @@
+/* eslint-disable no-console */
 import fs, { promises as fsPromises } from 'fs'
 import path from 'path'
 import defu from 'defu'
 
-const MODE = process.env.MODE
-
-const ENVIRONMENT = process.env.ENV
+const ENVIRONMENT = process.env.ENV || 'dev'
 const IS_DEV = ENVIRONMENT === 'dev'
+const IS_PREPROD = ENVIRONMENT === 'preprod'
 const IS_PROD = ENVIRONMENT === 'prod'
 
+const MODE = process.env.MODE
+const BASE_URL = {
+  dev: 'http://localhost:3000',
+  preprod: 'http://preprod.my-site.fr',
+  prod: 'http://my-site.fr'
+}[ENVIRONMENT] || 'http://my-site.fr'
+
 const title = 'My project'
-const BASE_URL = 'http://myproject.fr'
 
 /**
 
@@ -18,6 +24,8 @@ const BASE_URL = 'http://myproject.fr'
  */
 const getFeaturesConfigs = async (_) => {
   const CONFIGS_PATH = path.resolve(__dirname, 'configs')
+
+  console.log(`Reading configs from ${CONFIGS_PATH} ...`)
 
   if (!fs.existsSync(CONFIGS_PATH)) {
     return []
@@ -28,10 +36,11 @@ const getFeaturesConfigs = async (_) => {
   return configsFilesNames
     .map((configFileName) => {
       return require(path.resolve(CONFIGS_PATH, configFileName))({
-        MODE,
         ENVIRONMENT,
         IS_DEV,
+        IS_PREPROD,
         IS_PROD,
+        MODE,
         BASE_URL,
         title
       })
@@ -60,14 +69,6 @@ export default async (_) => {
     buildModules: [
       '@nuxtjs/eslint-module'
     ],
-    modules: [
-      '@nuxtjs/pwa'
-    ],
-    pwa: {
-      manifest: {
-        lang: 'en'
-      }
-    },
     build: {}
   }
 
