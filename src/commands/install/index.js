@@ -1,4 +1,5 @@
 const inquirer = require('inquirer')
+const c = require('ansi-colors')
 
 const { getFeatures } = require('./Github.js')
 const { install } = require('./Installer.js')
@@ -17,21 +18,46 @@ const getFeaturesToInstall = async _ => {
   const availableFeatures = await getFeatures()
 
   const longestFeatureTitle = availableFeatures
-    .reduce((longest, feature) => {
-      if (feature.metas.title.length > longest) longest = feature.metas.title.length
+    .reduce((currentLongestFeatureTitle, feature) => {
+      if (feature.metas.title.length > currentLongestFeatureTitle) currentLongestFeatureTitle = feature.metas.title.length
 
-      return longest
+      return currentLongestFeatureTitle
     }, 0)
 
-  const choices = availableFeatures
-    .map(feature => {
-      return {
+  // Group by category
+  let choices = availableFeatures
+    .reduce((acc, feature) => {
+      feature.metas.category = feature.metas.category || 'Other'
+
+      const categoryKey = feature.metas.category
+        .toLowerCase()
+        .replace(/\//g, '')
+        .replace(/\s+/g, '_')
+
+      const choice = {
         name: `${feature.metas.title.padEnd(longestFeatureTitle + 10, ' ')} ${feature.metas?.description}`,
         value: feature.uid,
         short: feature.metas.title,
         checked: false
       }
-    })
+
+      const title = new inquirer.Separator(`\n${c.whiteBright.bold.underline(feature.metas.category)}\n`)
+
+      acc[categoryKey] = {
+        title,
+        children: [...acc?.[categoryKey]?.children || [], choice]
+      }
+
+      return acc
+    }, {})
+
+  // Flatten all
+  choices = Object.values(choices)
+    .reduce((acc, curr) => {
+      acc.push(curr.title)
+      acc.push(...curr.children)
+      return acc
+    }, [])
 
   const { features: featuresUidsToInstall } = await inquirer
     .prompt([
