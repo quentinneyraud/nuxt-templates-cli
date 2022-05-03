@@ -8,8 +8,8 @@ const IS_DEV = ENVIRONMENT === 'dev'
 const IS_PREPROD = ENVIRONMENT === 'preprod'
 const IS_PROD = ENVIRONMENT === 'prod'
 
-const MODE = process.env.MODE
-const BASE_URL = {
+const MODE = process.env.MODE || 'static'
+const BASE_URL = process.env.BASE_URL || {
   dev: 'http://localhost:3000',
   preprod: 'http://preprod.my-site.fr',
   prod: 'http://my-site.fr'
