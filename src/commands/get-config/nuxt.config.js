@@ -3,11 +3,17 @@ import fs, { promises as fsPromises } from 'fs'
 import path from 'path'
 import defu from 'defu'
 
+/**
+ * Environment informations
+ */
 const ENVIRONMENT = process.env.ENV || 'dev'
 const IS_DEV = ENVIRONMENT === 'dev'
 const IS_PREPROD = ENVIRONMENT === 'preprod'
 const IS_PROD = ENVIRONMENT === 'prod'
 
+/**
+ * Build mode informations
+ */
 const MODE = process.env.MODE || 'static'
 const BASE_URL = process.env.BASE_URL || {
   dev: 'http://localhost:3000',
@@ -15,13 +21,16 @@ const BASE_URL = process.env.BASE_URL || {
   prod: 'http://my-site.fr'
 }[ENVIRONMENT] || 'http://my-site.fr'
 
-const title = 'My project'
-
 /**
-
-  Returns an array of each features config
-
+ * Website informations
  */
+const lang = 'en'
+const title = 'My company'
+const description = 'My company is doing something'
+const themeColor = '#FFFFFF'
+const shareImage = '/share.jpg'
+
+// Returns an array of each features config
 const getFeaturesConfigs = async (_) => {
   const CONFIGS_PATH = path.resolve(__dirname, 'configs')
 
@@ -42,7 +51,11 @@ const getFeaturesConfigs = async (_) => {
         IS_PROD,
         MODE,
         BASE_URL,
-        title
+        lang,
+        title,
+        description,
+        shareImage,
+        themeColor
       })
     })
 }
@@ -50,26 +63,9 @@ const getFeaturesConfigs = async (_) => {
 export default async (_) => {
   const baseConfig = {
     target: 'static',
-
-    head: {
-      title,
-      meta: [
-        { charset: 'utf-8' },
-        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { hid: 'description', name: 'description', content: '' },
-        { name: 'format-detection', content: 'telephone=no' }
-      ],
-      link: [
-        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
-      ]
-    },
-    css: [],
-    plugins: [],
-    components: true,
     buildModules: [
       '@nuxtjs/eslint-module'
-    ],
-    build: {}
+    ]
   }
 
   const config = defu(baseConfig, ...(await getFeaturesConfigs()))
