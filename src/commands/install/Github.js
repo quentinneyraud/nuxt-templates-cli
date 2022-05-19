@@ -91,12 +91,10 @@ const recursivelyGetDirectoryContent = async (directoryPath, branchName, acc = [
   const directoryContents = await getDirectoryContent(directoryPath, branchName)
 
   if (!directoryContents) {
-    console.log('directoryContents:', directoryContents)
-
     return acc
   }
 
-  await Promise.all(directoryContents?.map(async fileOrDir => {
+  await Promise.all(directoryContents.map(async fileOrDir => {
     if (fileOrDir.type === 'file') {
       acc.push(fileOrDir)
     }
