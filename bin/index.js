@@ -12,6 +12,12 @@ Log.blankLine()
 // Get commands and arguments from CLI entry
 Cli.parse()
 
+// Version argument
+if (Cli.arguments.version) {
+  Cli.logVersion()
+  process.exit(0)
+}
+
 // No command or help argument
 if (!Cli.command || Cli.arguments.help) {
   Cli.logHelp()

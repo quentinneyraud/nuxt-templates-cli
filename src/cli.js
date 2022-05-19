@@ -1,4 +1,5 @@
 const c = require('ansi-colors')
+const { version } = require('../package.json')
 const Log = require('./Log.js')
 
 const INSTALL_COMMAND = 'install'
@@ -7,6 +8,8 @@ const COMMANDS = [INSTALL_COMMAND, CONFIG_COMMAND]
 
 const HELP_ARGUMENT = '--help'
 const HELP_ARGUMENT_ALIAS = '-h'
+const VERSION_ARGUMENT = '--version'
+const VERSION_ARGUMENT_ALIAS = '-v'
 const INSTALL_TOKEN_ARGUMENT = '--token'
 const INSTALL_REPOSITORY_ARGUMENT = '--repository'
 const INSTALL_TMP_DIRECTORY_ARGUMENT = '--tmp'
@@ -21,6 +24,7 @@ const Cli = {
 
   arguments: {
     help: false,
+    version: false,
     token: null,
     repository: null,
     tmpDirectory: null
@@ -38,6 +42,13 @@ const Cli = {
     // Help
     if (this.args.includes(HELP_ARGUMENT) || this.args.includes(HELP_ARGUMENT_ALIAS)) {
       this.arguments.help = true
+
+      return
+    }
+
+    // Version
+    if (process.argv.slice(1).includes(VERSION_ARGUMENT) || process.argv.slice(1).includes(VERSION_ARGUMENT_ALIAS)) {
+      this.arguments.version = true
 
       return
     }
@@ -65,9 +76,6 @@ const Cli = {
     this.args = process.argv.slice(2)
 
     this.getCommand()
-
-    if (!this.command) return
-
     this.getArguments()
   },
 
@@ -88,6 +96,10 @@ ${c.bold('Examples')}:
     nuxt-templates ${CONFIG_COMMAND}
     nuxt-templates ${INSTALL_COMMAND} ${INSTALL_TOKEN_ARGUMENT} abc123
 `)
+  },
+
+  logVersion () {
+    Log.log(`${c.bold.underline('Nuxt templates CLI')} ${c.bold(version)}`)
   }
 }
 
