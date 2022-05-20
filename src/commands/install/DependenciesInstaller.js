@@ -23,7 +23,7 @@ const DependenciesInstaller = {
     Log.log(this.dependencies.join(', '))
     Log.blankLine()
 
-    await lmify.install(...this.dependencies)
+    await lmify.install(this.dependencies)
 
     Log.blankLine()
   },
@@ -33,7 +33,7 @@ const DependenciesInstaller = {
     Log.log(this.devDependencies.join(', '))
     Log.blankLine()
 
-    await lmify.install(['-D', ...this.devDependencies])
+    await lmify.install(['-D', this.devDependencies])
 
     Log.blankLine()
   },
