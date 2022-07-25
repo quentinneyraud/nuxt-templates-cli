@@ -15,7 +15,9 @@ const getRepo = () => {
 }
 
 const getFeaturesBranchesNames = async _ => {
-  const [branches] = await getRepo().branchesAsync()
+  const [branches] = await getRepo().branchesAsync({
+    per_page: 100
+  })
 
   return branches
     .filter(({ name }) => name.includes('features'))
