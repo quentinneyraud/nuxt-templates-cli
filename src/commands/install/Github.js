@@ -37,7 +37,7 @@ const getFeatures = async _ => {
 
         await download(installationFile.download_url, featureTmpDirectory)
 
-        const { metas, dependencies, devDependencies, files } = require(`${featureTmpDirectory}/nuxt-templates-cli.js`)
+        const { metas, dependencies, devDependencies, installCommands, files } = require(`${featureTmpDirectory}/nuxt-templates-cli.js`)
 
         if (!metas?.title || typeof metas.title !== 'string') return null
 
@@ -48,6 +48,7 @@ const getFeatures = async _ => {
           metas,
           dependencies,
           devDependencies,
+          installCommands,
           files
         }
       } catch (_) {

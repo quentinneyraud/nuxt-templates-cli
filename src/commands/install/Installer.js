@@ -1,12 +1,13 @@
+const { execSync } = require('child_process')
 const download = require('download')
 const colors = require('ansi-colors')
 const cliProgress = require('cli-progress')
 const Log = require('../../Log.js')
 const DependenciesInstaller = require('./DependenciesInstaller.js')
 const { recursivelyGetDirectoryContent, getDirectoryContent } = require('./Github.js')
-const { mergeArrays } = require('../../utils.js')
+const { mergeArrays, execAsync } = require('../../utils.js')
 
-const install = async ({ uid, metas, featureTmpDirectory, branchName, dependencies, devDependencies, files } = {}, index) => {
+const install = async ({ uid, metas, featureTmpDirectory, branchName, dependencies, devDependencies, installCommands, files } = {}, index) => {
   const fileDownloadsPromises = []
 
   // Add dependencies
@@ -67,6 +68,19 @@ const install = async ({ uid, metas, featureTmpDirectory, branchName, dependenci
   progressBar.start(fileDownloadsPromises.length, 0)
   await Promise.all(fileDownloadsPromises.map(fn => fn()))
   progressBar.stop()
+
+  /**
+   *
+   * Install
+   *
+   */
+  if (installCommands) {
+    Log.blankLine()
+    Log.log('Running install commands...')
+
+    installCommands
+      .forEach(installCommand => execSync(installCommand, { stdio: 'inherit' }))
+  }
 
   Log.blankLine()
   Log.separator()
