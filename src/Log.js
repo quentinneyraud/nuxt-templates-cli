@@ -8,6 +8,8 @@ const separator = (n = 100) => console.log(SEPARATOR_CHARACTER.repeat(n))
 
 const warning = str => console.log(c.orange(str))
 
+const info = str => console.log(c.cyan.underline(str))
+
 const error = str => console.log(c.red(str))
 
 const success = str => console.log(c.green(str))
@@ -22,6 +24,7 @@ module.exports = {
   blankLine,
   separator,
   warning,
+  info,
   error,
   success,
   log,
