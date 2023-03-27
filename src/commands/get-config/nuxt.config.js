@@ -62,10 +62,7 @@ const getFeaturesConfigs = async (_) => {
 
 export default async (_) => {
   const baseConfig = {
-    target: 'static',
-    buildModules: [
-      '@nuxtjs/eslint-module'
-    ]
+    target: 'static'
   }
 
   const config = defu(baseConfig, ...(await getFeaturesConfigs()))
