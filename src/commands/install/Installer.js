@@ -8,7 +8,7 @@ const DependenciesInstaller = require('./DependenciesInstaller.js')
 const { recursivelyGetDirectoryContent, getDirectoryContent } = require('./Github.js')
 const { mergeArrays } = require('../../utils.js')
 
-const install = async ({ uid, metas, featureTmpDirectory, branchName, dependencies, devDependencies, installCommands, files, postInstall } = {}, index) => {
+const install = async ({ uid, metas, branchName, dependencies, devDependencies, installCommands, files, postInstall } = {}, index) => {
   const fileDownloadsPromises = []
 
   // Add dependencies
@@ -27,7 +27,7 @@ const install = async ({ uid, metas, featureTmpDirectory, branchName, dependenci
    *
    */
   const progressBar = new cliProgress.SingleBar({
-    format: colors.cyan('{bar}') + ' {percentage}% ({value}/{total})'
+    format: `${colors.cyan('{bar}')} {percentage}% ({value}/{total})`
   }, cliProgress.Presets.shades_classic)
 
   if (files) {

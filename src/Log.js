@@ -16,9 +16,9 @@ const success = str => console.log(c.green(str))
 
 const log = str => console.log(str)
 
-const title = str => console.log(c.bold.underline(str) + '\n')
+const title = str => console.log(`${c.bold.underline(str)}\n`)
 
-const subtitle = str => console.log(c.bgWhite.black.bold(` ${str} `) + '\n')
+const subtitle = str => console.log(`${c.bgWhite.black.bold(` ${str} `)}\n`)
 
 module.exports = {
   blankLine,

@@ -31,7 +31,7 @@ const themeColor = '#FFFFFF'
 const shareImage = '/share.jpg'
 
 // Returns an array of each features config
-const getFeaturesConfigs = async (_) => {
+const getFeaturesConfigs = async _ => {
   const CONFIGS_PATH = path.resolve(__dirname, 'configs')
 
   console.log(`Reading configs from ${CONFIGS_PATH} ...`)
@@ -43,7 +43,7 @@ const getFeaturesConfigs = async (_) => {
   const configsFilesNames = await fsPromises.readdir(CONFIGS_PATH)
 
   return configsFilesNames
-    .map((configFileName) => {
+    .map(configFileName => {
       return require(path.resolve(CONFIGS_PATH, configFileName))({
         ENVIRONMENT,
         IS_DEV,
@@ -60,7 +60,7 @@ const getFeaturesConfigs = async (_) => {
     })
 }
 
-export default async (_) => {
+export default async _ => {
   const baseConfig = {
     target: 'static'
   }

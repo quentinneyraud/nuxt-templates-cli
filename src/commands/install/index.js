@@ -75,7 +75,7 @@ const getFeaturesToInstall = async _ => {
     .filter(availableFeature => featuresUidsToInstall.includes(availableFeature.uid))
 }
 
-const run = async (cliArgs) => {
+const run = async cliArgs => {
   Config.merge(cliArgs)
 
   if (!isNuxtDir(process.cwd())) {

@@ -30,7 +30,7 @@ if (Cli.command === Cli.INSTALL_COMMAND) {
 
   install
     .run(Cli.arguments)
-    .catch((error) => {
+    .catch(error => {
       if (error) console.error('Error:', error)
     })
 }
