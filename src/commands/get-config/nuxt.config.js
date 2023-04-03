@@ -15,11 +15,8 @@ const IS_PROD = ENVIRONMENT === 'prod'
  * Build mode informations
  */
 const MODE = process.env.MODE || 'static'
-const BASE_URL = process.env.BASE_URL || {
-  dev: 'http://localhost:3000',
-  preprod: 'http://preprod.my-site.fr',
-  prod: 'http://my-site.fr'
-}[ENVIRONMENT] || 'http://my-site.fr'
+const BASE_URL = process.env.BASE_URL
+const IS_INDEXED = process.env.IS_INDEXED ? process.env.IS_INDEXED === 'true' : IS_PROD
 
 /**
  * Website informations
@@ -51,6 +48,7 @@ const getFeaturesConfigs = async _ => {
         IS_PROD,
         MODE,
         BASE_URL,
+        IS_INDEXED,
         lang,
         title,
         description,
