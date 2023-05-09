@@ -1,6 +1,6 @@
 {
   "name": "nuxt-templates-cli",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "license": "ISC",
   "description": "Command line utility to add configurations and features templates to Nuxt projects",
   "keywords": [],
