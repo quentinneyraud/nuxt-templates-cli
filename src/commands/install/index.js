@@ -16,7 +16,6 @@ const Log = require('../../Log.js')
  */
 const getFeaturesToInstall = async _ => {
   const inquirer = (await import('inquirer')).default
-  console.log('inquirer:', inquirer)
   const availableFeatures = await getFeatures()
 
   const longestFeatureTitle = availableFeatures
