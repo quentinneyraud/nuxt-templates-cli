@@ -1,4 +1,4 @@
-const inquirer = require('inquirer')
+// const inquirer = import('inquirer')
 const c = require('ansi-colors')
 
 const { getFeatures } = require('./Github.js')
@@ -15,6 +15,8 @@ const Log = require('../../Log.js')
  * @returns {Array} Array of features objects selected by user
  */
 const getFeaturesToInstall = async _ => {
+  const inquirer = (await import('inquirer')).default
+  console.log('inquirer:', inquirer)
   const availableFeatures = await getFeatures()
 
   const longestFeatureTitle = availableFeatures
